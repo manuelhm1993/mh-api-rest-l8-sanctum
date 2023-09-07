@@ -15,7 +15,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         // Usando el Facade DB para crear las querys
-        DB::table('products')->insert(
+        DB::table('products')->insert([
             [
                 'name'        => 'Iphone 13',
                 'description' => 'Mobile phone apple',
@@ -31,6 +31,6 @@ class ProductSeeder extends Seeder
                 'description' => 'Video console',
                 'amount'      => 540,
             ],
-        );
+        ]);
     }
 }
