@@ -82,4 +82,26 @@ class AuthController extends Controller
 
         return response()->json($data, $status);
     }
+
+    public function logout(Request $request) {
+        $data   = [];
+        $status = 200;
+
+        try {
+            // Eliminar los tokens del usuario y cerrar la sesión (tokens) es provisto por el Trait HasApiTokens
+            // auth()->user()->tokens()->delete();
+            $request->user()->tokens()->delete();
+
+            // Eliminar el token actual de la sesión
+            // $request->user()->currentAccessToken()->delete();
+
+            $data   = ['message' => 'Has finalizado sesión exitosamente y sus tokens fueron borrados'];
+        }
+        catch (\Exception $e) {
+            $data   = ['error' => $e->getMessage()];
+            $status = 400;
+        }
+
+        return response()->json($data, $status);
+    }
 }

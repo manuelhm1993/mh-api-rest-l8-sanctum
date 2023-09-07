@@ -30,3 +30,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
 });
+
+// Middleware para rutas protegidas por autenticación
+Route::middleware(['auth:sanctum'])->group(function () {
+    // El logout debe estar protegido porque se requiere el login para poder hacer logout
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
