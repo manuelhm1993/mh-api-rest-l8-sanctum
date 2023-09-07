@@ -25,6 +25,8 @@ Route::apiResources([
     'products' => ProductController::class,
 ]);
 
+// Rutas de autenticación y registro de usuario
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
+    Route::post('/login', 'login');
 });

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,8 +13,7 @@ use \stdClass;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
+    public function register(Request $request) {
         // Crear reglas de validación manualmente
         $validator = Validator::make(
             // Datos de entrada
@@ -50,5 +49,37 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type'   => 'Bearer', // Tipo de token requerido por sanctum
         ]);
+    }
+
+    public function login(Request $request) {
+        $data   = [];
+        $status = 200;
+
+        // Si la autenticación falla
+        if(!Auth::attempt($request->only('email', 'password'))) {
+            $data   = ['Error' => 'No autorizado'];
+            $status = 401;
+        }
+        // Si la autenticación tiene éxito
+        else {
+            try {
+                $user  = User::where('email', $request->email)->firstOrFail();
+                $token = $user->createToken('auth_token')->plainTextToken;
+
+                $data   = [
+                    'message'     => "Hola {$user->name}",
+                    'accessToken' => $token,
+                    'tokenType'   => 'Bearer',
+                    'user'        => $user,
+                ];
+            }
+            catch (ModelNotFoundException $e) {
+                $data   = ['Error' => $e->getMessage()];
+                $status = 404;
+            }
+
+        }
+
+        return response()->json($data, $status);
     }
 }
