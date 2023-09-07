@@ -14,7 +14,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $data   = [];
+        $status = 200;
+
+        try {
+            $products = Product::all();
+            $data = ['products' => $products];
+        }
+        catch (\Exception $e) {
+            $data = ['error' => $e->getMessage()];
+            $status = 400;
+        }
+
+        return response()->json($data, $status);
     }
 
     /**

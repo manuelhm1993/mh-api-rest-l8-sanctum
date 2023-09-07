@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Creando rutas de recursos para API, esto excluye las rutas create y edit que no son necesarias en este ámbito
+Route::apiResources([
+    'products' => ProductController::class,
+]);
